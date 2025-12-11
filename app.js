@@ -287,15 +287,26 @@ function setupComments(videoId) {
 
   renderComments();
   sortSelect.onchange = renderComments;
-  commentForm.onsubmit = (ev)=>{
+commentForm.onsubmit = (ev)=>{
     ev.preventDefault();
     const text = commentText.value.trim();
     if(!text) return alert("Comment cannot be empty.");
+
     const username = document.getElementById("username").value || "Anonymous";
-    db.run("INSERT INTO comments (video_id, username, comment) VALUES (?,?,?);",[videoId,username,text]);
+
+    // Ensure username exists in table
+    const ins = db.prepare("INSERT OR IGNORE INTO users (username) VALUES (?);");
+    ins.run([username]);
+    ins.free();
+
+    db.run(
+      "INSERT INTO comments (video_id, username, comment) VALUES (?,?,?);",
+      [videoId, username, text]
+    );
+
     commentText.value="";
     renderComments();
-  };
+};
 }
 //I honestly dont think this is needed anymore since everything is local due to so many issues.
 function attachUploadUI() {
@@ -412,7 +423,21 @@ function attachUI(){
   attachUploadUI();
 }
 
+function attachUsernameUI() {
+  const input = document.getElementById("username");
+  const saveBtn = document.getElementById("save-user");
 
+  // Load username on startup
+  input.value = localStorage.getItem("username") || "";
+
+  // Save username when clicking
+  saveBtn.onclick = () => {
+    const u = input.value.trim();
+    if (!u) return alert("Username cannot be empty.");
+    localStorage.setItem("username", u);
+    alert("Username saved!");
+  };
+}
 
 
 function renderGridWrapper(){
@@ -425,6 +450,7 @@ function renderGridWrapper(){
 
 
 (async function main(){
+  attachUsernameUI();
   await initDB();
   attachUI();
   renderGridWrapper();
