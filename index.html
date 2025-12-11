@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CSI-3450, Justin's Project</title>
+
+  <!-- This gets sqllite so it can work in the browser without a backend, this was done to upload on GitHub pages -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">Overflow Video</div>
+    <div class="user-area">
+      <label for="username">User:</label>
+      <input id="username" placeholder="Enter username" />
+      <button id="save-user">Save</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="controls">
+      <input id="search" placeholder="Search videos..." />
+      <select id="sort">
+        <option value="uploaded_at DESC">Newest</option>
+        <option value="views DESC">Most viewed</option>
+        <option value="title ASC">Title (A–Z)</option>
+      </select>
+
+      <!-- Upload toggle -->
+      <button id="toggle-upload" class="btn-small">Upload Video</button>
+    </section>
+
+    <!-- (hidden by default) -->
+    <section id="upload-panel" class="upload-panel hidden" aria-hidden="true">
+      <h3>Upload Video (local only)</h3>
+      <form id="upload-form" autocomplete="off">
+        <div class="form-row">
+          <label for="upload-file">File (MP4 preferred):</label>
+          <input id="upload-file" type="file" accept="video/*" required />
+        </div>
+        <div class="form-row">
+          <label for="upload-title">Title:</label>
+          <input id="upload-title" type="text" required />
+        </div>
+        <div class="form-row">
+          <label for="upload-desc">Description:</label>
+          <textarea id="upload-desc" rows="3"></textarea>
+        </div>
+        <div class="form-row">
+          <label for="upload-thumbnail">Thumbnail (optional image):</label>
+          <input id="upload-thumbnail" type="file" accept="image/*" />
+        </div>
+
+        
+    
+        <div id="upload-preview" class="upload-preview hidden">
+          <div class="preview-left">
+            <div id="thumbnail-preview" class="thumbnail-preview">No thumbnail</div>
+          </div>
+          <div class="preview-right">
+            <div id="upload-status" class="upload-status muted">Ready to upload</div>
+            <div class="progress-wrap">
+              <div id="upload-progress" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                <div id="upload-progress-fill" class="progress-fill" style="width:0%"></div>
+              </div>
+            </div>
+            <div id="upload-msg" class="upload-msg"></div>
+          </div>
+        </div>
+
+        
+        <div class="form-row actions">
+          <button id="do-upload" type="submit">Upload</button>
+          <button id="cancel-upload" type="button">Cancel</button>
+        </div>
+        
+        
+      </form>
+    </section>
+
+    <section id="video-grid" class="grid" aria-live="polite"></section>
+  </main>
+
+  <!-- Video player modal -->
+  <div id="player-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button id="close-modal" class="close-btn" aria-label="Close">&times;</button>
+
+      <div class="player-area">
+        <video id="player-video" controls playsinline width="800"></video>
+
+        <div class="player-meta">
+          <h3 id="player-title"></h3>
+          <div class="uploader-row">
+            <div id="uploader-avatar" class="avatar"></div>
+            <div>
+              <div id="uploader-name" class="uploader-name"></div>
+              <div id="uploaded-date" class="muted"></div>
+            </div>
+          </div>
+          
+          <p id="player-desc"></p>
+          <div class="stats small">
+            <span id="player-views">0 views</span>
+            <span>&middot;</span>
+            <span id="player-filename"></span>
+          </div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <!-- Comments area -->
+      <section class="comments-section">
+        <div class="comment-controls">
+          <label for="comment-sort">Sort comments:</label>
+          <select id="comment-sort">
+            <option value="commented_at DESC">Newest</option>
+            <option value="commented_at ASC">Oldest</option>
+            <option value="username ASC">Username (A–Z)</option>
+          </select>
+        </div>
+
+        <div id="comments-list" class="comments-list"></div>
+
+        <form id="comment-form" class="comment-form">
+          <textarea id="comment-text" rows="3" placeholder="Add a public comment..."></textarea>
+          <div class="comment-actions">
+            <button id="submit-comment" type="submit">Comment</button>
+          </div>
+        </form>
+      </section>
+
+    </div>
+  </div>
+
+  
+  
+  <!-- Slightly flawed script, but it works -->
+  <script src="app.js"></script>
+  
+  
+  <div id="disclaimer">Note: These are some of my old videos, I have a beard and long hair now. Aditioanlly, because video files are so big, uploaded videos are not persistent, but still added to the database with SQL.</div>
+  
+  
+</body>
+</html>
