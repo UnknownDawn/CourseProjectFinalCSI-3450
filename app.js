@@ -67,7 +67,7 @@ function seedDemoVideos() {
     "videos/video1.mp4",
     "thumbnails/Thumbnail1.png",
     "Justin",
-    "2025-12-8",
+    "2025-11-8",
     "7"
   ]);
   insertVid.run([
@@ -126,12 +126,12 @@ function seedDemoVideos() {
   ]);
     insertVid.run([
     "Man Skates Away While Talking About A Hockey Stick",
-    "I stkae around a rink with no context",
+    "I skate around a rink with no context",
     "videos/video8.mp4",
     "",
     "Justin",
     "2025-11-10",
-    "17"
+    "9"
   ]);
     insertVid.run([
     "Promesses Cover - Guitar",
@@ -140,7 +140,7 @@ function seedDemoVideos() {
     "",
     "Justin",
     "2025-11-11",
-    "17"
+    "23"
   ]);
   
   insertVid.free();
